@@ -94,6 +94,7 @@
       <list>
         <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/travel/pom.xml" />
+        <option value="$PROJECT_DIR$/myORM/pom.xml" />
       </list>
     </option>
   </component>

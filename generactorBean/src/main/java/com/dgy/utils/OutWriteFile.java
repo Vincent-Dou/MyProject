@@ -13,7 +13,7 @@ import java.util.Map;
  * Author: vincent-Dou
  * Description：
  */
-public class OutFile {
+public class OutWriteFile {
 
     private static final String TAB ="    ";
     private static final String RN = "\r\n";
@@ -68,21 +68,5 @@ public class OutFile {
             e.printStackTrace();
         }
         System.out.println("===================="+tableName+"写入成功=========================");
-    }
-
-
-    public static void main(String[] args) {
-        File file = new File("E:\\shenchenwenjian\\test.java");
-        try {
-            OutputStream outputStream = new FileOutputStream(file);
-            PrintStream printStream = new PrintStream(outputStream);
-            printStream.println("hello");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-
-//        Map<String, String> tab_category = Table.getCloumInfomation("tab_category");
-//        System.out.println(tab_category);
-//        outJavaBean("tab_category",tab_category);
     }
 }

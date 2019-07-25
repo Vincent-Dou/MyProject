@@ -15,8 +15,6 @@ import java.util.Properties;
  * Description：
  */
 public class DBConnectionInfo {
-    public DBConnectionInfo() {
-    }
 
     /**
      * 加载配置文件

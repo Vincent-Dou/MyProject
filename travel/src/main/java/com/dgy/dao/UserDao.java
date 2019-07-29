@@ -1,56 +1,54 @@
 package com.dgy.dao;
 
 import com.dgy.domain.User;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
-
-import java.util.List;
+import com.dgy.utils.JDBCUtils;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 /**
- * Date: 2019/7/26
- * Time: 22:45
+ * Date: 2019/7/28
+ * Time: 18:52
  * Author: vincent-Dou
  * Description：
  */
-public interface UserDao {
+public class UserDao {
+
+    private JdbcTemplate jdbcTemplate = new JdbcTemplate(JDBCUtils.getDataSource());
+
     /**
-     * 根据用户名查询用户
-     * @param userName
-     * @return
+     * 根据用户名查询用户对象
      */
-    @Select("select * from tab_user where username = #{username}")
-    User findUserByUserName(String userName);
+    public User findUserByUserName(String username){
+        User user = null;
+        String sql = "select * from tab_user where username = ?";
+        user =jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(User.class), username);
+        return user;
+    }
 
     /**
      * 添加用户
      */
-    @Insert("insert into tab_user(username,password,name,birthday,sex,telephone,email,status,code) values(#{username}, #{password}, #{name}, #{birthday}, #{sex}, #{telephone}, #{email}, #{status}, #{code})")
-    void saveUser(User user);
+    public void addUser(User user){
+        String sql = "insert into tab_user(username,password,name,birthday,sex,telephone,email,status,code) values(?,?,?,?,?,?,?,?,?)";
+        jdbcTemplate.update(sql, user.getUsername(), user.getPassword(), user.getName(),
+                                 user.getBirthday(), user.getSex(), user.getTelephone(),
+                                 user.getEmail(), user.getStatus(), user.getCode()
+                );
+    }
 
     /**
-     *根据激活码查询用户
+     * 根据激活码查询用户对象
      */
-    @Select("select * from tab_user where code = #{code}")
-    User findUserByCode(String code);
+    public User findUserByCode(String code){
+        String sql = "select * from tab_user where code = ?";
+        User user = null;
+        user = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(User.class), code);
+        return user;
+    }
 
-
-    /**
-     * 更新用户的激活状态
-     */
-    @Update("update tab_user set status='Y' where uid = #{uid}")
-    void updateStatus(User user);
-
-    /**
-     * 查询所有用户
-     */
-    @Select("select * from tab_user")
-    List<User> findAllUser();
-
-    /**
-     * 根据用户名和密码查询用户
-     */
-    @Select("select * from tab_user where username = #{user} and password = #{password}")
-    User findUserByUserNameAndPassword(@Param("user") String username, @Param("password") String password);
+    public static void main(String[] args) {
+        User user = new UserDao().findUserByCode("10c7ab10b3e84534beec37398f7e967d");
+//        User user = new UserDao().findUserByUserName("douguangyao");
+        System.out.println(user);
+    }
 }

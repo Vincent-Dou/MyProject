@@ -1,17 +1,27 @@
 package com.dgy.dao;
 
 import com.dgy.domain.Category;
-import org.apache.ibatis.annotations.Select;
+import com.dgy.utils.JDBCUtils;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
 
 /**
- * Date: 2019/7/23
- * Time: 12:10
+ * Date: 2019/7/28
+ * Time: 18:39
  * Author: vincent-Dou
  * Description：
  */
-public interface CategoryDao {
-    @Select("select * from tab_category")
-    List<Category> findAll();
+public class CategoryDao {
+
+    //声明模板对象,执行查询
+    private JdbcTemplate template = new JdbcTemplate(JDBCUtils.getDataSource()) ;
+
+    public List<Category> findAll() {
+        //准备sql
+        String sql = "select * from tab_category" ;
+        return template.query(sql,new BeanPropertyRowMapper<Category>(Category.class));
+    }
+
 }

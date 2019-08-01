@@ -12,7 +12,7 @@ import java.util.Properties;
  * Date: 2019/7/31
  * Time: 10:42
  * Author: vincent-Dou
- * Description：使用jedis数据库
+ * Description：使用redis数据库
  */
 public class JedisUtil {
     private static JedisPool jedisPool;

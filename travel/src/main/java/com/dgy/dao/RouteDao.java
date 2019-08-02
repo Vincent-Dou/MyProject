@@ -30,16 +30,19 @@ public class RouteDao {
         StringBuffer sb = new StringBuffer(sql) ;
         sb.append("cid=").append(cid);
         sb.append(" and rname like ").append("'%"+rname+"%'");
-        System.out.println(sb);
-        int temp = template.queryForObject(sb.toString(), Integer.class);
-        System.out.println(temp);
-        return temp;
+//        System.out.println(sb);
+        return template.queryForObject(sb.toString(), Integer.class);
+
     }
 
     public static void main(String[] args) {
         RouteDao routeDao = new RouteDao();
-        routeDao.findTotalPage(5, "宁夏");
-//        System.out.println(routeDao.findTotalPage(5, "宁夏"));
+        routeDao.findTotalPage(5, "");
+        System.out.println(routeDao.findTotalPage(5, "宁夏"));
+
+//        List<Route> byPage = routeDao.findByPage(5, 0, 0, "1099");
+//        System.out.println(byPage);
+
     }
 
     /**
@@ -51,18 +54,16 @@ public class RouteDao {
      */
     public List<Route> findByPage(int cid, int start, int pageSize, String rname) {
 
-        String sql = "select *  from tab_route where 1=1 " ;
-        //拼接sql
+        String sql = "select *  from tab_route where " ;
         StringBuffer sb = new StringBuffer(sql) ;
-        //判断并且给参数赋值
         sb.append("cid=").append(cid);
         sb.append(" and rname like ").append("'%"+rname+"%'");
-        sb.toString() ;
-
-        //创建条件List集合
-        List<Route> params = new ArrayList() ;
-
-//        return template.query(sql,new BeanPropertyRowMapper<Route>(Route.class),cid,start,pageSize) ;
-        return template.query(sql,new BeanPropertyRowMapper<Route>(Route.class),params.toArray()) ;
+        System.out.println(sb.toString());
+        List<Route> allRoute = template.query(sb.toString(), new BeanPropertyRowMapper<>(Route.class));
+        List<Route> resultRoute = null;
+        for (int i = start; i < start + pageSize; i++){
+            resultRoute.add(allRoute.get(i));
+        }
+        return resultRoute;
     }
 }

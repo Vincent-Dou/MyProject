@@ -37,7 +37,7 @@ public class UserService {
     /**
      * 邮件激活
      */
-    public boolean actice(String code){
+    public boolean active(String code){
         User user = userDao.findUserByCode(code);
         if (user != null){
             userDao.updateStatus(user);

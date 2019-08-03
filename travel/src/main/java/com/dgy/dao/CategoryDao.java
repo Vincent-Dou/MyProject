@@ -2,6 +2,7 @@ package com.dgy.dao;
 
 import com.dgy.domain.Category;
 import com.dgy.utils.JDBCUtils;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -21,7 +22,17 @@ public class CategoryDao {
     public List<Category> findAll() {
         //准备sql
         String sql = "select * from tab_category" ;
-        return template.query(sql,new BeanPropertyRowMapper<Category>(Category.class));
+        List<Category> list = null;
+        try {
+            list = template.query(sql,new BeanPropertyRowMapper<Category>(Category.class));
+        } catch (Exception e) {
+            return list;
+        }
+        return list;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(new CategoryDao().findAll());
     }
 
 }

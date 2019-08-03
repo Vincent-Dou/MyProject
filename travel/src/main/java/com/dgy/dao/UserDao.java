@@ -2,6 +2,8 @@ package com.dgy.dao;
 
 import com.dgy.domain.User;
 import com.dgy.utils.JDBCUtils;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -21,7 +23,11 @@ public class UserDao {
     public User findUserByUserName(String username){
         User user = null;
         String sql = "select * from tab_user where username = ?";
-        user =jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(User.class), username);
+        try {
+            user =jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(User.class), username);
+        }catch (EmptyResultDataAccessException e){
+            return null;
+        }
         return user;
     }
 
@@ -41,7 +47,11 @@ public class UserDao {
     public User findUserByCode(String code){
         String sql = "select * from tab_user where code = ?";
         User user = null;
-        user = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(User.class), code);
+        try {
+            user = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(User.class), code);
+        } catch (Exception e) {
+            return user;
+        }
         return user;
     }
 
@@ -61,14 +71,19 @@ public class UserDao {
     public User findUserByUsernameAndPassword(String username, String password){
         User user = null;
         String sql = "select * from tab_user where username = ? and password = ?";
-        user = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(User.class), username, password);
+        try {
+            user = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(User.class), username, password);
+        } catch (Exception e) {
+            return null;
+        }
         return user;
     }
 
     public static void main(String[] args) {
-        User user = new UserDao().findUserByUsernameAndPassword("zhangsan", "1234567890");
-//        User user = new UserDao().findUserByCode("10c7ab10b3e84534beec37398f7e967d");
+//        User user = new UserDao().findUserByUsernameAndPassword("zhangsan", "1234567890");
+        User user = new UserDao().findUserByCode("10c7ab10b3e84534beec37398f7e967d");
 //        User user = new UserDao().findUserByUserName("douguangyao");
+//        User user = new UserDao().findUserByUserName("zhangsan");
         System.out.println(user);
     }
 }

@@ -2,6 +2,7 @@ package com.dgy.dao;
 
 import com.dgy.domain.Route;
 import com.dgy.utils.JDBCUtils;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -15,7 +16,6 @@ import java.util.List;
  * Description：旅游线路商品的dao的实现层
  */
 public class RouteDao {
-    private JdbcTemplate jdbcTemplate = new JdbcTemplate(JDBCUtils.getDataSource());
     private JdbcTemplate template = new JdbcTemplate(JDBCUtils.getDataSource()) ;
 
     public int findTotalPage(int cid,String rname) {
@@ -30,15 +30,20 @@ public class RouteDao {
         StringBuffer sb = new StringBuffer(sql) ;
         sb.append("cid=").append(cid);
         sb.append(" and rname like ").append("'%"+rname+"%'");
-//        System.out.println(sb);
-        return template.queryForObject(sb.toString(), Integer.class);
-
+        int temp = 0;
+        try {
+          temp = template.queryForObject(sb.toString(), Integer.class);
+        } catch (Exception e) {
+            return temp;
+        }
+        return temp;
     }
 
     public static void main(String[] args) {
         RouteDao routeDao = new RouteDao();
-        routeDao.findTotalPage(5, "");
-        System.out.println(routeDao.findTotalPage(5, "宁夏"));
+
+//        routeDao.findTotalPage(5, "");
+//        System.out.println(routeDao.findTotalPage(5, "宁夏"));
 
 //        List<Route> byPage = routeDao.findByPage(5, 0, 0, "1099");
 //        System.out.println(byPage);
@@ -59,7 +64,12 @@ public class RouteDao {
         sb.append("cid=").append(cid);
         sb.append(" and rname like ").append("'%"+rname+"%'");
         System.out.println(sb.toString());
-        List<Route> allRoute = template.query(sb.toString(), new BeanPropertyRowMapper<>(Route.class));
+        List<Route> allRoute = null;
+        try {
+            allRoute =  template.query(sb.toString(), new BeanPropertyRowMapper<>(Route.class));
+        } catch (Exception e) {
+            return allRoute;
+        }
         List<Route> resultRoute = null;
         for (int i = start; i < start + pageSize; i++){
             resultRoute.add(allRoute.get(i));

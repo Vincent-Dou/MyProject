@@ -6,6 +6,7 @@ import com.dgy.utils.JedisUtil;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Tuple;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -20,7 +21,7 @@ public class CategoryService {
     private CategoryDao categoryDao = new CategoryDao();
 
     public List<Category> findCategoryList(){
-        List<Category> categoryList = null;
+        List<Category> categoryList = new ArrayList<>();
         Jedis jedis = JedisUtil.getJedis();
         //获取分类id
         Set<Tuple> categories = jedis.zrangeWithScores("category",0,-1) ;

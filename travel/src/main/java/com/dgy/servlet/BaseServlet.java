@@ -18,12 +18,6 @@ import java.lang.reflect.Method;
 //RegistUserServlet
 //registUserServlet
 public class BaseServlet extends HttpServlet {
-   /* protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    }
-
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-    }*/
 
    //重写HttpServlet中的service方法(serlvet的入口)
 
@@ -32,14 +26,15 @@ public class BaseServlet extends HttpServlet {
             throws ServletException, IOException {
         // /   travle/user/add  :获取访问子类Servlet的uri的路径
         String uri = request.getRequestURI();
-        System.out.println(uri);
+//        System.out.println(uri);
         // 获取uri中的方法名add   travel/user/add
         String methodName = uri.substring(uri.lastIndexOf("/")+1)  ;//start end
-        System.out.println(methodName);
+
+//        System.out.println(methodName);
 
         //1 .获取子类对象
         Class clazz = this.getClass();
-        System.out.println(clazz);
+//        System.out.println(clazz);
         //2.调用子类中的方法
         //暴力反射(获取子类私有的/受保护的方法)
         try {
